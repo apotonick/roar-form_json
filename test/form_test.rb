@@ -39,13 +39,28 @@ class FormTest < MiniTest::Spec
       form.from_hash([{:type=>:text, "name"=>:text, :label=>"Comment (160 chars only)"}, {:type=>:radio, :name=>:rating, :label=>"Was this gem helpful to you?", :data=>[{:value=>1, :src=>"thumb_up.png", :label=>"Hell yeah!"}, {:value=>0, :src=>"thumb_down.png", :label=>"Not really..."}]}, {:type=>:select, :name=>:version, :data=>[{:value=>:current, :selected=>true, :text=>:current}, {:value=>"v0.0.9"}]}])
       form
     end
-    
-    it "provides #element reader" do
-      subject.element(:text)[:label].must_equal "Comment (160 chars only)"
-    end
 
     it "provides #elements" do
       
+    end
+  end
+
+  describe "#element" do
+    subject { Object.new.extend(Module.new{ include Roar::Representer::JSON::Form }) }
+
+    it "works with incoming symbols" do
+      subject.from_hash [{:type=>:text, :name=>:comment, :label=>"Comment (160 chars only)"}]
+      subject.element(:comment).type.must_equal :text
+    end
+
+    it "works with incoming strings" do
+      subject.from_hash [{"type"=>:text, "name"=>"comment", "label"=>"Comment (160 chars only)"}]
+      subject.element(:comment).type.must_equal :text
+    end
+
+    it "works with incoming symbol values" do
+      subject.from_hash [{:type=>:text, "name"=>:comment, :label=>"Comment (160 chars only)"}]
+      subject.element(:comment).type.must_equal :text
     end
   end
 end

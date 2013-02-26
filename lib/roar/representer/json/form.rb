@@ -35,14 +35,13 @@ module Roar::Representer::JSON
 
       def from_hash(hash, *args)
         # FIXME: for now, we store it in another instance var, do it as it's done with Hyperlinks.
-        @bla = hash
+        @bla = hash.collect do |el|
+          OpenStruct.new(el)  # FIXME: use representable's built-in mechanics.
+        end
       end
 
       def element(name)
-        @bla.find do |el|
-          # TODO: stringify everything, damnit!
-          el["name"].to_s == name.to_s
-        end
+        @bla.find { |el| el.name.to_s == name.to_s }
       end
     end
   end
