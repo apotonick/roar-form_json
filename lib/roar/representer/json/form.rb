@@ -40,7 +40,8 @@ module Roar::Representer::JSON
 
       def element(name)
         @bla.find do |el|
-          el[:name].to_s == name.to_s
+          # TODO: stringify everything, damnit!
+          el["name"].to_s == name.to_s
         end
       end
     end

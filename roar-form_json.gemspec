@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'roar/representer/json/form/version'
 
 Gem::Specification.new do |gem|
-  gem.name          = "roar-json_form"
+  gem.name          = "roar-form_json"
   gem.version       = Roar::Representer::JSON::Form::VERSION
   gem.authors       = ["Nick Sutterer"]
   gem.email         = ["apotonick@gmail.com"]
