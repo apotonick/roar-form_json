@@ -19,6 +19,20 @@ class FormTest < MiniTest::Spec
     Object.new.extend(representer).to_hash.must_equal [{:type=>:text, :name=>:text, :label=>"Comment (160 chars only)"}, {:type=>:radio, :name=>:rating, :label=>"Was this gem helpful to you?", :data=>[{:value=>1, :src=>"thumb_up.png", :label=>"Hell yeah!"}, {:value=>0, :src=>"thumb_down.png", :label=>"Not really..."}]}, {:type=>:select, :name=>:version, :data=>[{:value=>:current, :selected=>true, :text=>:current}, {:value=>"v0.0.9"}]}]
   end
 
+  describe "with user options" do
+    representer!(Roar::Representer::JSON::Form) do
+      select :version do |opts|
+        # this should be done in a decorator normally.
+        [{:value => opts[:gem].versions.first, :text => "current"}] +
+          opts[:gem].versions.collect { |v| {:value => v} }
+      end
+    end
+
+    it "uses passed options in block" do
+      Object.new.extend(representer).to_hash(:gem => OpenStruct.new(:versions => ["v1", "v2"])).must_equal [{:type=>:select, :name=>:version, :data=>[{:value=>"v1", :text=>"current"}, {:value=>"v1", :text=>"v1"}, {:value=>"v2", :text=>"v2"}]}]
+    end
+  end
+
   describe "parsing" do
     subject do
       form = Object.new.extend(representer)
