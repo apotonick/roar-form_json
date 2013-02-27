@@ -45,22 +45,22 @@ class FormTest < MiniTest::Spec
     end
   end
 
-  describe "#element" do
+  describe "#[]" do
     subject { Object.new.extend(Module.new{ include Roar::Representer::JSON::Form }) }
 
     it "works with incoming symbols" do
       subject.from_hash [{:type=>:text, :name=>:comment, :label=>"Comment (160 chars only)"}]
-      subject.element(:comment).type.must_equal :text
+      subject[:comment].type.must_equal :text
     end
 
     it "works with incoming strings" do
       subject.from_hash [{"type"=>:text, "name"=>"comment", "label"=>"Comment (160 chars only)"}]
-      subject.element(:comment).type.must_equal :text
+      subject[:comment].type.must_equal :text
     end
 
     it "works with incoming symbol values" do
       subject.from_hash [{:type=>:text, "name"=>:comment, :label=>"Comment (160 chars only)"}]
-      subject.element(:comment).type.must_equal :text
+      subject[:comment].type.must_equal :text
     end
   end
 end

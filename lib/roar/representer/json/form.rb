@@ -40,7 +40,7 @@ module Roar::Representer::JSON
         end
       end
 
-      def element(name)
+      def [](name)
         @bla.find { |el| el.name.to_s == name.to_s }
       end
     end
