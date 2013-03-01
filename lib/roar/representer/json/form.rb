@@ -36,12 +36,19 @@ module Roar::Representer::JSON
       def from_hash(hash, *args)
         # FIXME: for now, we store it in another instance var, do it as it's done with Hyperlinks.
         @bla = hash.collect do |el|
-          OpenStruct.new(el)  # FIXME: use representable's built-in mechanics.
+          # TODO: create appropriate class here, Select, Radio, etc. USING REPRESENTABLE!
+          Element.new(el)  # FIXME: use representable's built-in mechanics.
         end
       end
 
       def [](name)
         @bla.find { |el| el.name.to_s == name.to_s }
+      end
+    end
+
+    class Element < OpenStruct
+      def options # FIXME: Select only.
+        data.collect{ |d| [(d["text"] or d["value"]), d["value"]]}
       end
     end
   end

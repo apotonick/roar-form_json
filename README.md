@@ -10,15 +10,15 @@ Representers for the (unofficial!) Form+JSON media type.
 ## Example for Form+JSON
 
 		[
-			{ 
+			{
 				type  : "text",
-				name  : "text", 
+				name  : "comment",
 				label : "Comment (160 max.)"
 			},
 
 			{
 				type  : "radio",
-				name  : "rating", 
+				name  : "rating",
 				label : "Was this gem helpful to you?",
 				data  :[
 					{ value: 1, src: "thumb_up.png", label: "Hell yeah!" },
@@ -29,7 +29,7 @@ Representers for the (unofficial!) Form+JSON media type.
 			{
 				type  : "select",
 				name  : "version",
-				size  : 1, 
+				size  : 1,
 				data  : [
 					{ value: current, selected: true, text: current },
 					{ value: v0.0.9 }
@@ -38,3 +38,5 @@ Representers for the (unofficial!) Form+JSON media type.
 		]
 
 		+ validations!
+
+* Select#options

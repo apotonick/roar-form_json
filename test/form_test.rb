@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class FormTest < MiniTest::Spec
+  subject { Object.new.extend(representer) }
   representer!(Roar::Representer::JSON::Form) do
     text :text, :label => "Comment (160 chars only)"
 
@@ -16,8 +17,23 @@ class FormTest < MiniTest::Spec
   end
 
   it "renders" do
-    Object.new.extend(representer).to_hash.must_equal [{:type=>:text, :name=>:text, :label=>"Comment (160 chars only)"}, {:type=>:radio, :name=>:rating, :label=>"Was this gem helpful to you?", :data=>[{:value=>1, :src=>"thumb_up.png", :label=>"Hell yeah!"}, {:value=>0, :src=>"thumb_down.png", :label=>"Not really..."}]}, {:type=>:select, :name=>:version, :data=>[{:value=>:current, :selected=>true, :text=>:current}, {:value=>"v0.0.9"}]}]
+    subject.to_hash.must_equal [{:type=>:text, :name=>:text, :label=>"Comment (160 chars only)"}, {:type=>:radio, :name=>:rating, :label=>"Was this gem helpful to you?", :data=>[{:value=>1, :src=>"thumb_up.png", :label=>"Hell yeah!"}, {:value=>0, :src=>"thumb_down.png", :label=>"Not really..."}]}, {:type=>:select, :name=>:version, :data=>[{:value=>:current, :selected=>true, :text=>:current}, {:value=>"v0.0.9"}]}]
   end
+
+  describe "::select" do
+    representer!(Roar::Representer::JSON::Form) do
+      #select :version, :data => [
+      #  {:value => :current, selected: true, :text => :current},
+      #  {:value => "v0.0.9"}
+      #]
+    end
+
+    it "provides #options" do
+      subject.from_hash([{:type=>:select, :name=>:version, :data=>[{"value"=>"current", "selected"=>true, "text"=>"-- current"}, {"value"=>"v1"}]}])
+      subject[:version].options.must_equal [["-- current", "current"], ["v1", "v1"]]
+    end
+  end
+
 
   describe "with user options" do
     representer!(Roar::Representer::JSON::Form) do
@@ -38,10 +54,6 @@ class FormTest < MiniTest::Spec
       form = Object.new.extend(Module.new{ include Roar::Representer::JSON::Form })
       form.from_hash([{:type=>:text, "name"=>:text, :label=>"Comment (160 chars only)"}, {:type=>:radio, :name=>:rating, :label=>"Was this gem helpful to you?", :data=>[{:value=>1, :src=>"thumb_up.png", :label=>"Hell yeah!"}, {:value=>0, :src=>"thumb_down.png", :label=>"Not really..."}]}, {:type=>:select, :name=>:version, :data=>[{:value=>:current, :selected=>true, :text=>:current}, {:value=>"v0.0.9"}]}])
       form
-    end
-
-    it "provides #elements" do
-      
     end
   end
 
