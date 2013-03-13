@@ -40,3 +40,4 @@ Representers for the (unofficial!) Form+JSON media type.
 		+ validations!
 
 * Select#options
+* Radio#each/[]

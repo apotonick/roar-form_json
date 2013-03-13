@@ -34,8 +34,22 @@ class FormTest < MiniTest::Spec
     end
   end
 
+  describe "::radio" do
+    let (:form) { subject.from_hash([{:type=>:radio, :name=>:rating, :label=>"Was this gem helpful to you?", :data=>[{:value=>1, :src=>"thumb_up.png", :label=>"Hell yeah!"}, {:value=>0, :src=>"thumb_down.png", :label=>"Not really..."}]}]) }
+    it "provides #each implementing Enumerable" do
+      form[:rating][0].value.must_equal 1
+      form[:rating][1].value.must_equal 0
+      form[:rating][2].must_equal nil
+      # TODO: test #each, #first, #last.
+    end
 
-  describe "with user options" do
+    it "provides #first" do
+      form[:rating].first.value.must_equal 1
+    end
+  end
+
+
+  describe "with user options in #to_hash" do
     representer!(Roar::Representer::JSON::Form) do
       select :version do |opts|
         # this should be done in a decorator normally.
@@ -45,7 +59,8 @@ class FormTest < MiniTest::Spec
     end
 
     it "uses passed options in block" do
-      Object.new.extend(representer).to_hash(:gem => OpenStruct.new(:versions => ["v1", "v2"])).must_equal [{:type=>:select, :name=>:version, :data=>[{:value=>"v1", :text=>"current"}, {:value=>"v1", :text=>"v1"}, {:value=>"v2", :text=>"v2"}]}]
+      Object.new.extend(representer).to_hash(:gem => OpenStruct.new(:versions => ["v1", "v2"])).must_equal [
+        {:type=>:select, :name=>:version, :data=>[{:value=>"v1", :text=>"current"}, {:value=>"v1"}, {:value=>"v2"}]}]
     end
   end
 

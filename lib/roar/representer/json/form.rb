@@ -39,6 +39,8 @@ module Roar::Representer::JSON
           # TODO: create appropriate class here, Select, Radio, etc. USING REPRESENTABLE!
           Element.new(el)  # FIXME: use representable's built-in mechanics.
         end
+
+        self  # FIXME: test that.
       end
 
       def [](name)
@@ -49,6 +51,17 @@ module Roar::Representer::JSON
     class Element < OpenStruct
       def options # FIXME: Select only.
         data.collect{ |d| [(d["text"] or d["value"]), d["value"]]}
+      end
+
+      include Enumerable # FIXME: Radio only.
+      def each(*args, &block)
+        data.each(*args) do |cfg|
+          block.call(self.class.new(cfg))
+        end
+      end
+      # FIXME: implement the above properly
+      def [](index)
+        self.class.new (data[index] or return) # TODO: create RadioButton.
       end
     end
   end
